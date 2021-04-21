@@ -39,6 +39,17 @@ def get_info_about_offer(db, table, offer_id):
         }
         return answer_json
 
+def cart_clear(db, table, id):
+    db.session.query(table.cart).delete().where(person_id=id)
+
+def check_cart(db, table_us, id):
+    cart = (db.session.query(table_us.cart).filter_by(person_id=id).first())
+    return cart, len(cart)
+
+def check_fav(db, table_us, id):
+    fav = (db.session.query(table_us.favorites).filter_by(person_id=id).first())
+    return fav, len(fav)
+
 
 # надо-ли сразу ставить статус 'в пути', вдруг человек ещё не оплатил
 def add_order_from_user(db, table_ord, table_us, who_add, what_add):
@@ -97,12 +108,12 @@ def add_cart(db, table, person_id, offer_id):
         db.session.query(table).filter_by(person_id=int(person_id)).update({'cart': offer.cart + ',' + offer_id})
     db.session.commit()
 
-def get_user_name(user, group_token):
+def get_user_name(user):
     params = {'user_ids': user, 'v': '5.130', 'access_token': group_token}
     return requests.get('https://api.vk.com/method/users.get', params=params).json()['response'][0]['first_name']
 
 
-def check_bill(user, billId):
+def check_bill(db, user, billId):
     data = requests.get(f'https://api.qiwi.com/partner/bill/v1/bills/{billId}', headers={'Authorization': q_code, 'Content-Type': 'application/json', 'Accept': 'application/json'}).json()
     try:
         return data['status']['value']
@@ -110,7 +121,7 @@ def check_bill(user, billId):
         return 'ERROR'
 
 
-def set_bill(user, amount, offers):
+def set_bill(db, user, amount, offers):
     data = {
         "amount": {
             "currency": "RUB",
@@ -123,7 +134,7 @@ def set_bill(user, amount, offers):
     return data['billId'], data['payUrl']
 
 
-def send_message(user, text, tabe, **kwargs):
+def send_message(db, user, text, table, **kwargs):
     keyboards = {'main': '{"buttons":[[{"action":{"type":"text","label":"Куда я попал?","payload":""},"color":"positive"}],\
               [{"action":{"type":"text","label":"Каталог","payload":""},"color":"primary"}],\
               [{"action":{"type":"text","label":"Корзина","payload":""},"color":"primary"}],\
@@ -135,8 +146,8 @@ def send_message(user, text, tabe, **kwargs):
     if kwargs.get('template') != None and 'catalog' in kwargs.get('template'):
         carousel = {"type": "carousel", "elements": []}
         pos = 6 * int(kwargs.get('template').replace('catalog', ''))
-        for i in list(db.session.query(tabe).all())[pos: pos + 6]:
-            carousel['elements'].append({"title": i.call + '\n' + str(i.actually_cost) + '₽', "description": i.about[:77] + '...', "action": {"type": "open_link", "link": f"https://oblako.pythonanywhere.com/offer/{i.offer_id}"}, "buttons": [{"action": {"type": "text", "label": f"💰 Купить \n [{i.offer_id}]"}, "color": "primary"}, {
+        for i in list(db.session.query(table).all())[pos: pos + 6]:
+            carousel['elements'].append({"title": i.call + '\n' + str(i.actually_cost) + '₽', "photo_id": i.photo_id, "description": i.about[:77] + '...', "action": {"type": "open_link", "link": f"https://oblako.pythonanywhere.com/offer/{i.offer_id}"}, "buttons": [{"action": {"type": "text", "label": f"💰 Купить \n [{i.offer_id}]"}, "color": "primary"}, {
                 "action": {"type": "text", "label": f"➕ Добавить в корзину \n [{i.offer_id}]"}, "color": "positive"}, {"action": {"type": "open_link", "link": f"https://oblako.pythonanywhere.com/offer/{i.offer_id}", "label": "Поподробнее"}}]})
 
         params['template'] = dumps(carousel)
@@ -145,74 +156,3 @@ def send_message(user, text, tabe, **kwargs):
     return requests.get('https://api.vk.com/method/messages.send', params=params).text
 
 
-# функции для проверки работы программы с компьютера
-# def add_offer_to_offers_table(db, table):
-#     call = input()
-#     actually_cost_is = int(input())
-#     always_cost = int(input())
-#     about = input()
-#     amount = 100
-#     json_offer = {'size': ['big', 'small'],
-#                   'color': ['red', 'blue', 'black']
-#                   }
-#     can_be = json.dumps(json_offer)
-#     user_str = table(call=call, actually_cost=actually_cost_is,
-#                      always_cost=always_cost, amount=amount,
-#                      about=about, can_be=can_be)
-#     db.session.add(user_str)
-#     db.session.commit()
-#
-#
-# def add_user_to_user(db, table):
-#     print(f'name = input() email = input() phone = input()')
-#     name = input()
-#     email = input()
-#     phone = input()
-#     user_str = table(name=name, email=email, phone=phone)
-#     db.session.add(user_str)
-#     db.session.commit()
-#
-#
-# def add_order_to_orders(db, table):
-#     print(f'id who and id what')
-#     who = int(input())
-#     when = datetime.date.today()
-#     what = int(input())
-#     user_str = table(who_id=who, when=when, what_offer=what)
-#     db.session.add(user_str)
-#     db.session.commit()
-#
-# def add_picture_to_offer(db, table):
-#     id = int(input())
-#     pict = input()
-#     offer_pict = db.session.query(table.call).filter_by(offer_id=id).scalar
-#     path = f"assets/img/{pict}"
-#     if path:
-#         path_to = f"{offer_pict}?{path}"
-#     else:
-#         path_to = path
-#     db.session.query(table).filter_by(offer_id=id).update({'picture': path_to})
-#     db.session.commit()
-
-
-# Функции для проверки заполнения
-# def check_us(db, table):
-#     save = db.session.query(table).all()
-#     if save != None:
-#         for x in save:
-#             print(x)
-#
-#
-# def check_of(db, table):
-#     save = db.session.query(table).all()
-#     if save != None:
-#         for x in save:
-#             print(x.actually_cost)
-#         print(len(save))
-#
-#
-# def check_ord(db, table):
-#     save = db.session.query(table).all()
-#     if save != None:
-#         for x in save:
-#             print(x)
