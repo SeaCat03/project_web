@@ -5,23 +5,23 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
     <title>ОблакО</title>
-    <link rel="stylesheet" href="assets/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/assets/bootstrap/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans+Condensed:">
-    <link rel="stylesheet" href="assets/fonts/fontawesome-all.min.css">
-    <link rel="stylesheet" href="assets/css/Footer-Basic.css">
-    <link rel="stylesheet" href="assets/css/Footer-Clean.css">
-    <link rel="stylesheet" href="assets/css/Footer-Dark.css">
-    <link rel="stylesheet" href="assets/css/Navigation-Clean.css">
-    <link rel="stylesheet" href="assets/css/Projects-Clean.css">
-    <link rel="stylesheet" href="assets/css/styles.css">
+    <link rel="stylesheet" href="/assets/fonts/fontawesome-all.min.css">
+    <link rel="stylesheet" href="/assets/css/Footer-Basic.css">
+    <link rel="stylesheet" href="/assets/css/Footer-Clean.css">
+    <link rel="stylesheet" href="/assets/css/Footer-Dark.css">
+    <link rel="stylesheet" href="/assets/css/Navigation-Clean.css">
+    <link rel="stylesheet" href="/assets/css/Projects-Clean.css">
+    <link rel="stylesheet" href="/assets/css/styles.css">
 </head>
 
-<body class="d-flex d-lg-flex flex-column" style="background: url(&quot;assets/img/5A8cUP7syM4.jpg&quot;);background-size: cover;">
+<body class="d-flex d-lg-flex flex-column" style="background: url(&quot;/assets/img/5A8cUP7syM4.jpg&quot;);background-size: cover;">
     <nav class="navbar navbar-light navbar-expand-md d-xxl-flex" style="top: 0px;position: sticky;z-index: 1;background: linear-gradient(152deg, rgba(92,108,255,0.8), rgba(99,255,246,0.8) 100%);">
         <div class="container-fluid"><a class="navbar-brand d-flex d-sm-flex d-md-flex d-lg-flex d-xl-flex d-xxl-flex align-items-center align-items-sm-center align-items-md-center align-items-lg-center align-items-xl-center align-items-xxl-center" href="#" style="font-size: 30px;height: 10vh;font-family: 'Open Sans Condensed', sans-serif;"><strong>ОблакО</strong></a><button data-bs-toggle="collapse" class="navbar-toggler" data-bs-target="#navcol-1"><span class="visually-hidden">Toggle navigation</span><span class="navbar-toggler-icon"></span></button>
             <div class="collapse navbar-collapse d-xxl-flex justify-content-xxl-end" id="navcol-1">
                 <ul class="navbar-nav">
-                    <li class="nav-item" style="font-size: 25px;"><a class="nav-link active" href="/#list" style="font-family: 'Open Sans Condensed', sans-serif;"><i class="fas fa-long-arrow-alt-left"></i>Назад</a></li>
+                    <li class="nav-item" style="font-size: 25px;"><a class="nav-link active" href="javascript:history.back()" style="font-family: 'Open Sans Condensed', sans-serif;"><i class="fas fa-long-arrow-alt-left"></i>Назад</a></li>
                     <li class="nav-item" style="font-size: 25px;"><a class="nav-link active" href="/lk" style="font-family: 'Open Sans Condensed', sans-serif;"><i class="far fa-user"></i>&nbsp;Аккаунт</a></li>
                     <li class="nav-item" style="font-size: 25px;"><a class="nav-link active" href="/#list" style="font-family: 'Open Sans Condensed', sans-serif;">Каталог</a></li>
                     <li class="nav-item" style="font-size: 25px;"><a class="nav-link active" href="https://vk.com/public203370905"><i class="fab fa-vk"></i></a></li>
@@ -32,11 +32,9 @@
     <div class="container" style="margin-left: -9px;margin-top: 2vh;">
         <div class="row" style="width: 100vw;">
             <div class="col" id="carousel">
-                <div class="carousel slide" data-bs-ride="carousel" data-bs-interval="2000" id="carousel-1" style="width: 100%;">
+                <div class="carousel slide" data-bs-ride="carousel" data-bs-interval="false" id="carousel-1" style="width: 100%;">
                     <div class="carousel-inner">
-                        <div class="carousel-item active" style="height: 100%;"><img class="w-100 d-block" src="https://static.tildacdn.com/tild6566-3836-4335-b539-383032303037/TB2qmzOtVXXXXbSXXXXX.jpg" alt="Slide Image"></div>
-                        <div class="carousel-item" style="height: 100%;"><img class="w-100 d-block" src="https://i.pinimg.com/originals/00/21/88/0021880d1da75e950027bf5c642a9033.jpg" alt="Slide Image"></div>
-                        <div class="carousel-item" style="height: 100%;"><img class="w-100 d-block" src="http://ae01.alicdn.com/kf/HTB1oqquPFXXXXbwapXXq6xXFXXX6/1.jpg_q50.jpg" alt="Slide Image"></div>
+                        {{pictures|safe}}
                     </div>
                     <div><a class="carousel-control-prev" href="#carousel-1" role="button" data-bs-slide="prev"><span class="carousel-control-prev-icon"></span><span class="visually-hidden">Previous</span></a><a class="carousel-control-next" href="#carousel-1" role="button" data-bs-slide="next"><span class="carousel-control-next-icon"></span><span class="visually-hidden">Next</span></a></div>
                 </div>
@@ -44,16 +42,16 @@
             <div class="col" id="infoblock">
                 <div class="card textdark border-info text-dark shadow-lg" style="border-top-left-radius: 40px;border-bottom-right-radius: 40px;">
                     <div class="card-body">
-                        <h1 class="display-5" style="font-family: 'Open Sans Condensed', sans-serif;height: 10vh;margin-top: 2vh;">Подушка от LongDog<br></h1>
-                        <p style="font-size: 25px;margin-top: 5vh;">Милая плюшевая длинная подушка для лежания.<br></p>
+                        <h1 class="display-5" style="font-family: 'Open Sans Condensed', sans-serif;height: 10vh;margin-top: 2vh;">{{call}}<br></h1>
+                        <p style="font-size: 25px;margin-top: 5vh;">{{about}}<br></p>
                         <div class="row">
                             <div class="col d-md-flex align-items-md-center">
-                                <h1 class="display-5" style="font-size: 300%;">799₽<br></h1>
+                                <h1 class="display-5" style="font-size: 300%;">{{price}}<br></h1>
                             </div>
                             <div class="col d-md-flex d-xxl-flex align-items-md-center align-items-xxl-center">
-                                <h1 class="display-6" style="font-size: 280%;"><span style="text-decoration: line-through;">1000₽</span><br></h1>
+                                <h1 class="display-6" style="font-size: 280%;"><span style="text-decoration: line-through;">{{price}}</span><br></h1>
                             </div>
-                            <div class="col d-md-flex d-xxl-flex justify-content-md-end align-items-md-center justify-content-xxl-end align-items-xxl-center"><i class="far fa-heart" style="font-size: 300%;"></i></div>
+                            {{old_price}}
                         </div>
                     </div>
                 </div>
@@ -99,7 +97,27 @@
             </div>
         </div>
     </div>
-    <script src="assets/bootstrap/js/bootstrap.min.js"></script>
+    <footer class="footer-dark">
+        <div class="container">
+            <div class="row">
+                <div class="col-sm-6 col-md-3 item">
+                    <h3>Ссылки</h3>
+                    <ul>
+                        <li><a href="/terms">Пользовательское соглашение</a></li>
+                        <li><a href="#list">Каталог</a></li>
+                        <li><a href="/lk">Личный кабинет</a></li>
+                    </ul>
+                </div>
+                <div class="col-md-6 item text">
+                    <h3>ОблакО</h3>
+                    <p>Проект в Яндекс.Лицей</p>
+                </div>
+                <div class="col d-xxl-flex justify-content-xxl-start align-items-xxl-center item social"><a href="https://vk.com/oblako301"><i class="fab fa-vk"></i></a></div>
+            </div>
+            <p class="copyright">ОблакО © 2021</p>
+        </div>
+    </footer>
+    <script src="/assets/bootstrap/js/bootstrap.min.js"></script>
 </body>
 
 </html>
