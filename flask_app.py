@@ -268,7 +268,6 @@ def bot():
         elif message['text'] == 'Каталог':
             send_message(db, message['peer_id'], f'Вот наш каталог:', table=offer_table, template='catalog0')
             for i in range(1, len(list(db.session.query(offer_table).all())) // 9 + 1):
-                sleep(1)
                 send_message(db, message['peer_id'], '&#12288;', table=offer_table, template=f'catalog{i}')
             return 'ok'
 
