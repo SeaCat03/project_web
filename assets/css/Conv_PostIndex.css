@@ -1,0 +1,9 @@
+@font-face {
+	font-family: 'Conv_PostIndex';
+	src: url(/assets/fonts/PostIndex.eot) format('embedded-opentype'),
+	url(/assets/fonts/PostIndex.woff) format('woff'),
+	url(/assets/fonts/PostIndex.ttf) format('truetype'),
+	url(/assets/fonts/PostIndex.svg) format('svg');
+	font-weight: normal;
+	font-style: normal;
+}
