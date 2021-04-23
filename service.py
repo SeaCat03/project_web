@@ -1,14 +1,26 @@
-from flask import Flask
-from flask_sqlalchemy import SQLAlchemy
 import datetime
+import string
 from json import dumps, loads
+from random import randint, choice
 import requests
-from time import sleep, time, strftime, localtime
+from time import time, strftime, localtime
 from config import q_code, group_token, group_id
 
-import db.models.offers as Offers
-import db.models.users as Users
-import db.models.orders as Orders
+
+users_tokens = {}
+def generate_token(user):
+    global users_tokens
+
+    data = list(string.ascii_letters + string.digits)
+    res = ''
+    for i in range(randint(100, 200)):
+        res += choice(data)
+
+    users_tokens[str(user)] = res
+    return res
+
+def check_token(user, token):
+    return users_tokens.get(str(user)) == token
 
 
 
@@ -29,12 +41,13 @@ def add_email_to_user_table(db, table, name, phone, email):
 def get_info_about_offer(db, table, offer_id):
     offer = db.session.query(table).filter_by(offer_id=offer_id).scalar()
     if offer != None:
+        js = loads(offer.can_be)
         answer_json = {
             'call': offer.call,
             'actually_cost': offer.actually_cost,
             'always_cost': offer.always_cost,
             'about': offer.about,
-            'can_be': offer.can_be,
+            'can_be': js,
             'picture': list(map(lambda x: '/' + x, offer.picture.split('?')))
         }
         return answer_json
@@ -43,12 +56,28 @@ def cart_clear(db, table, id):
     db.session.query(table.cart).delete().where(person_id=id)
 
 def check_cart(db, table_us, id):
-    cart = (db.session.query(table_us.cart).filter_by(person_id=id).first())
-    return cart, len(cart)
+    res = db.session.query(table_us.cart).filter_by(person_id=id).first()
+    fav_list = []
+    try:
+        if res:
+            for x in res:
+                for y in x.split(','):
+                    fav_list.append(int(y))
+    except Exception:
+        pass
+    return res, len(fav_list)
 
 def check_fav(db, table_us, id):
-    fav = (db.session.query(table_us.favorites).filter_by(person_id=id).first())
-    return fav, len(fav)
+    res = db.session.query(table_us.favorites).filter_by(person_id=id).first()
+    fav_list = []
+    try:
+        if res:
+            for x in res:
+                for y in x.split(','):
+                    fav_list.append(int(y))
+    except Exception:
+        pass
+    return res, len(fav_list)
 
 
 # надо-ли сразу ставить статус 'в пути', вдруг человек ещё не оплатил
@@ -75,9 +104,30 @@ def add_offer_to_person_favorites(db, table, who_id, what_id):
     what_user_has = db.session.query(table.favorites).filter_by(
         person_id=who_id).scalar()
     if what_user_has != None:
-        add_what = f"{what_user_has},{what_id}"
-        db.session.query(table).filter_by(user_id=who_id).update({'favorites': add_what})
-        db.session.commit()
+        if len(what_user_has):
+            add_what = f"{what_user_has},{what_id}"
+            db.session.query(table).filter_by(person_id=who_id).update({'favorites': add_what})
+            db.session.commit()
+        else:
+            add_what = f"{what_id}"
+            db.session.query(table).filter_by(person_id=who_id).update({'favorites': add_what})
+            db.session.commit()
+
+def del_offer_from_person(db, table, who_id, what_id):
+    what_user_has = db.session.query(table.favorites).filter_by(
+        person_id=who_id).scalar()
+    to = what_user_has.split(',')
+    del to[to.index(what_id)]
+    have_to = ''
+    for i in range(len(to)):
+        print(i)
+        if to[i] and i + 1 != len(to):
+            have_to += f'{to[i]},'
+        elif to[i]:
+            have_to += f'{to[i]}'
+    db.session.query(table).filter_by(person_id=who_id).update({'favorites': have_to})
+    db.session.commit()
+
 
 
 # функция меняет статус заказа
@@ -107,6 +157,21 @@ def add_cart(db, table, person_id, offer_id):
     else:
         db.session.query(table).filter_by(person_id=int(person_id)).update({'cart': offer.cart + ',' + offer_id})
     db.session.commit()
+
+def del_cart_from_person(db, table, who_id, what_id):
+    what_user_has = db.session.query(table.cart).filter_by(
+        person_id=who_id).scalar()
+    to = what_user_has.split(',')
+    del to[to.index(what_id)]
+    have_to = ''
+    for i in range(len(to)):
+        if to[i] and i + 1 != len(to):
+            have_to += f'{to[i]},'
+        elif to[i]:
+            have_to += f'{to[i]}'
+    db.session.query(table).filter_by(person_id=who_id).update({'cart': have_to})
+    db.session.commit()
+
 
 def get_user_name(user):
     params = {'user_ids': user, 'v': '5.130', 'access_token': group_token}
@@ -139,7 +204,8 @@ def send_message(db, user, text, table, **kwargs):
               [{"action":{"type":"text","label":"Каталог","payload":""},"color":"primary"}],\
               [{"action":{"type":"text","label":"Корзина","payload":""},"color":"primary"}],\
               [{"action":{"type":"text","label":"ЧаВо","payload":""},"color":"positive"}]]}',
-                 'payment': '{"buttons":[[{"action":{"type":"text","label":"Я оплатил! \n Номер счета: ' + str(kwargs.get('billId')) + '","payload":""},"color":"positive"}]],"inline":true}'}
+                 'payment': '{"buttons":[[{"action":{"type":"text","label":"Я оплатил! \n Номер счета: ' + str(kwargs.get('billId')) + '","payload":""},"color":"positive"}]],"inline":true}',
+                 'cart': '{"buttons":[[{"action":{"type":"text","label":"💰 Оформить заказ","payload":""},"color":"positive"}],[{"action":{"type":"text","label":"🧹 Очистить всю корзину","payload":""},"color":"negative"}],[{"action":{"type":"text","label":"⬅️ На главную","payload":""},"color":"primary"}]]}'}
 
     params = {'user_id': user, 'random_id': 0, 'message': text, 'group_id': group_id, 'v': '5.130', 'access_token': group_token,
               'keyboard': keyboards.get(kwargs.get('keyboard'))}
@@ -151,6 +217,18 @@ def send_message(db, user, text, table, **kwargs):
                 "action": {"type": "text", "label": f"➕ Добавить в корзину \n [{i.offer_id}]"}, "color": "positive"}, {"action": {"type": "open_link", "link": f"https://oblako.pythonanywhere.com/offer/{i.offer_id}", "label": "Поподробнее"}}]})
 
         params['template'] = dumps(carousel)
+        del params['keyboard']
+
+    if kwargs.get('template') != None and 'cart' in kwargs.get('template'):
+        cart = {"type": "carousel", "elements": []}
+        pos = 9 * int(kwargs.get('template').replace('cart', ''))
+        cart_data = db.session.query(table).filter_by(person_id=user).first().cart.split(',')
+        for i in list(cart_data)[pos: pos + 6]:
+            if i != '':
+                i = db.session.query(kwargs.get('offer_table')).filter_by(offer_id=int(i)).first()
+                cart['elements'].append({"title": i.call + '\n' + str(i.actually_cost) + '₽', "photo_id": i.photo_id, "description": i.about[:77] + '...', "action": {"type": "open_link", "link": f"https://oblako.pythonanywhere.com/offer/{i.offer_id}"}, "buttons": [{"action":{"type":"text","label": f"❌ Удалить из корзины [{i.offer_id}]","payload":""},"color":"negative"}, {"action": {"type": "open_link", "link": f"https://oblako.pythonanywhere.com/offer/{i.offer_id}", "label": "Поподробнее"}}]})
+
+        params['template'] = dumps(cart)
         del params['keyboard']
 
     return requests.get('https://api.vk.com/method/messages.send', params=params).text
