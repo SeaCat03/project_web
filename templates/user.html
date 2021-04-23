@@ -6,6 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
     <title>ОблакО</title>
     <link rel="stylesheet" href="/assets/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/assets/css/Conv_PostIndex.css">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans+Condensed:">
     <link rel="stylesheet" href="/assets/fonts/fontawesome-all.min.css">
     <link rel="stylesheet" href="/assets/css/Footer-Basic.css">
@@ -21,9 +22,9 @@
         <div class="row">
             <div class="col d-lg-flex justify-content-lg-center" id="user_info">
                 <div class="card shadow-lg" style="border-top-left-radius: 5vw;border-bottom-right-radius: 5vw;width: 100%;background: rgba(255,255,255,0.5);filter: blur(0px);">
-                    <div class="card-body d-flex d-lg-flex flex-column align-items-center justify-content-lg-center align-items-lg-center justify-content-xxl-start"><img class="shadow-lg" style="border-top-left-radius: 5vw;border-bottom-right-radius: 5vw;height: 30vh;" src="https://sun9-23.userapi.com/impf/PvMIXX-kf7bXcq3FduksJPhRnTk88eC7w80ezg/_7rphHV16do.jpg?size=712x1546&amp;quality=96&amp;sign=392556e76e58fe9a4ab88b415c678409&amp;type=album">
-                        <h4 class="card-title">Мудила Какой-то</h4>
-                        <h6 class="text-text-muted card-subtitle mb-2">Почетный кто-то там</h6>
+                    <div class="card-body d-flex d-lg-flex flex-column align-items-center justify-content-lg-center align-items-lg-center justify-content-xxl-start">
+                        <h4 class="card-title">{{name}}</h4>
+                        <h6 class="text-text-muted card-subtitle mb-2">Почетный</h6>
                     </div>
                 </div>
             </div>
@@ -34,8 +35,7 @@
                     </div>
                     <div class="card-body shadow-lg d-flex d-lg-flex flex-column align-items-baseline align-items-lg-center justify-content-xl-center" style="border-bottom-right-radius: 5vh;">
                         <h4>Понравившиеся товары: {{fav_count}} шт</h4>
-                        <h4>Купленные товары: 1 шт</h4>
-                        <h4>Отзывы: 0</h4>
+                        <h4>Корзина: {{cart_count}} шт</h4>
                     </div>
                 </div>
             </div>
@@ -44,10 +44,12 @@
             <div class="col">
                 <div class="card" style="background: rgba(255,255,255,0.5);border-top-left-radius: 5vh;border-bottom-right-radius: 5vh;">
                     <div class="card-header" style="border-top-left-radius: 5vh;">
-                        <h4 class="d-lg-flex d-xl-flex d-xxl-flex justify-content-lg-center justify-content-xl-center justify-content-xxl-center mb-0">&nbsp;<i class="fas fa-shopping-cart"></i>&nbsp;Корзина - {{cart_count}} шт.</h4><button class="btn btn-primary" type="button" style="width: 100%;font-size: 21px;margin-top: 2vh;" data-toggle="modal" data-target="#cart">Оформить</button>
+                        <h4 class="d-lg-flex d-xl-flex d-xxl-flex justify-content-lg-center justify-content-xl-center justify-content-xxl-center mb-0">&nbsp;<i class="fas fa-shopping-cart"></i>&nbsp;Корзина - {{cart_count}} шт.</h4>
+                        <a class="btn btn-primary" role="button" style="width: 100%;font-size: 21px;margin-top: 2vh;" href="/confirm">Оформить</a>
                     </div>
                     <div class="card-body d-flex d-lg-flex flex-row align-items-baseline align-items-lg-center justify-content-xl-center">
-                        {{cart_pictures|safe}}
+                        <div class="d-inline-flex d-xxl-flex flex-row align-items-xxl-center">
+                            {{cart|safe}}
                         </div>
                     </div>
                 </div>
@@ -61,50 +63,10 @@
                     </div>
                     <div class="card-body d-flex d-lg-flex flex-row align-items-baseline align-items-lg-center justify-content-xl-center">
                         <div class="d-inline-flex d-xxl-flex flex-row align-items-xxl-center">
-                            <div class="card shadow-lg" id="product_id-1" style="border-top-left-radius: 5vh;border-bottom-right-radius: 5vh;margin-right: 1%;width: 48%;">
-                                <div class="card-body shadow-lg" style="border-top-left-radius: 5vh;border-bottom-right-radius: 5vh;">
-                                    <h4 class="d-md-flex d-lg-flex d-xl-flex d-xxl-flex justify-content-md-center justify-content-lg-center justify-content-xl-center justify-content-xxl-center card-title">Подушка от LongDog<br></h4>
-                                    <div class="carousel slide" data-bs-ride="carousel" data-bs-interval="false" id="carousel-2" style="width: 100%;">
-                                        <div class="carousel-inner">
-                                            <div class="carousel-item active" style="height: 100%;"><img class="w-100 d-block" src="https://static.tildacdn.com/tild6566-3836-4335-b539-383032303037/TB2qmzOtVXXXXbSXXXXX.jpg" alt="Slide Image"></div>
-                                            <div class="carousel-item" style="height: 100%;"><img class="w-100 d-block" src="https://i.pinimg.com/originals/00/21/88/0021880d1da75e950027bf5c642a9033.jpg" alt="Slide Image"></div>
-                                            <div class="carousel-item" style="height: 100%;"><img class="w-100 d-block" src="http://ae01.alicdn.com/kf/HTB1oqquPFXXXXbwapXXq6xXFXXX6/1.jpg_q50.jpg" alt="Slide Image"></div>
-                                        </div>
-                                        <div><a class="carousel-control-prev" href="#carousel-2" role="button" data-bs-slide="prev"><span class="carousel-control-prev-icon"></span><span class="visually-hidden">Previous</span></a><a class="carousel-control-next" href="#carousel-2" role="button" data-bs-slide="next"><span class="carousel-control-next-icon"></span><span class="visually-hidden">Next</span></a></div>
-                                    </div><a class="btn btn-primary" role="button" style="width: 100%;border-bottom-left-radius: 1vw;border-bottom-right-radius: 1vw;" href="/product/{product_id}">Посмотреть</a>
-                                    <form><input class="form-control" type="hidden" name="type" value="delete_like"><input class="form-control" type="hidden" name="product_id" value="product_id"><a class="btn btn-danger" role="button" style="width: 100%;margin-top: 0.5vh;margin-bottom: 2vh;" href="/product/{product_id}"><i class="fas fa-eraser"></i>&nbsp;Удалить из избранных</a></form>
-                                </div>
-                            </div>
-                            <div class="card shadow-lg" id="product_id-2" style="border-top-left-radius: 5vh;border-bottom-right-radius: 5vh;margin-left: 1%;width: 48%;">
-                                <div class="card-body shadow-lg" style="border-top-left-radius: 5vh;border-bottom-right-radius: 5vh;">
-                                    <h4 class="d-md-flex d-lg-flex d-xl-flex d-xxl-flex justify-content-md-center justify-content-lg-center justify-content-xl-center justify-content-xxl-center card-title">Подушка от LongDog<br></h4>
-                                    <div class="carousel slide" data-bs-ride="carousel" data-bs-interval="false" id="carousel-3" style="width: 100%;">
-                                        <div class="carousel-inner">
-                                            <div class="carousel-item active" style="height: 100%;"><img class="w-100 d-block" src="https://static.tildacdn.com/tild6566-3836-4335-b539-383032303037/TB2qmzOtVXXXXbSXXXXX.jpg" alt="Slide Image"></div>
-                                            <div class="carousel-item" style="height: 100%;"><img class="w-100 d-block" src="https://i.pinimg.com/originals/00/21/88/0021880d1da75e950027bf5c642a9033.jpg" alt="Slide Image"></div>
-                                            <div class="carousel-item" style="height: 100%;"><img class="w-100 d-block" src="http://ae01.alicdn.com/kf/HTB1oqquPFXXXXbwapXXq6xXFXXX6/1.jpg_q50.jpg" alt="Slide Image"></div>
-                                        </div>
-                                        <div><a class="carousel-control-prev" href="#carousel-3" role="button" data-bs-slide="prev"><span class="carousel-control-prev-icon"></span><span class="visually-hidden">Previous</span></a><a class="carousel-control-next" href="#carousel-3" role="button" data-bs-slide="next"><span class="carousel-control-next-icon"></span><span class="visually-hidden">Next</span></a></div>
-                                    </div><a class="btn btn-primary" role="button" style="width: 100%;border-bottom-left-radius: 1vw;border-bottom-right-radius: 1vw;" href="/product/{product_id}">Посмотреть</a>
-                                    <form><input class="form-control" type="hidden" name="type" value="delete_like"><input class="form-control" type="hidden" name="product_id" value="product_id"><a class="btn btn-danger" role="button" style="width: 100%;margin-top: 0.5vh;margin-bottom: 2vh;" href="/product/{product_id}"><i class="fas fa-eraser"></i>&nbsp;Удалить из избранных</a></form>
-                                </div>
-                            </div>
+                            {{fav|safe}}
                         </div>
                     </div>
                 </div>
-            </div>
-        </div>
-    </div>
-    <div class="modal fade" role="dialog" tabindex="-1" id="cart">
-        <div class="modal-dialog modal-fullscreen" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h4 class="modal-title">Заказ</h4><button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body">
-                    <p>The content of your modal.</p>
-                </div>
-                <div class="modal-footer"><button class="btn btn-light" type="button" data-bs-dismiss="modal">Close</button><button class="btn btn-primary" type="button">Save</button></div>
             </div>
         </div>
     </div>

@@ -49,9 +49,12 @@
                                 <h1 class="display-5" style="font-size: 300%;">{{price}}<br></h1>
                             </div>
                             <div class="col d-md-flex d-xxl-flex align-items-md-center align-items-xxl-center">
-                                <h1 class="display-6" style="font-size: 280%;"><span style="text-decoration: line-through;">{{price}}</span><br></h1>
+                                <h1 class="display-6" style="font-size: 280%;"><span style="text-decoration: line-through;">{{old_price}}</span><br></h1>
                             </div>
-                            {{old_price}}
+                            <div class="col d-md-flex d-xxl-flex justify-content-md-end align-items-md-center justify-content-xxl-end align-items-xxl-center">
+                                {{person_fav|safe}}
+
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -61,14 +64,12 @@
                             <h2 class="card-title" style="font-family: 'Open Sans Condensed', sans-serif;">Заполните поля</h2>
                             <div class="row">
                                 <div class="col">
-                                    <p style="font-size: 25px;">Выберите цвет:</p>
+                                    <p style="font-size: 25px;">Выберите {{can_be_name}}:</p>
                                 </div>
                                 <div class="col"><select class="form-select" style="font-size: 120%;" name="type">
-                                        <optgroup label="Выберите цвет">
+                                        <optgroup label="Выберите тип">
                                             <option value="no" selected="">Не указано</option>
-                                            <option value="black">Черный</option>
-                                            <option value="blue">Голубой</option>
-                                            <option value="red">Красный</option>
+                                            {{can_be|safe}}
                                         </optgroup>
                                     </select></div>
                             </div>
@@ -80,7 +81,8 @@
                             </div>
                         </div>
                     </div>
-                </form><button class="btn btn-primary shadow-lg" type="submit" style="width: 100%;font-size: 25px;border-top-left-radius: 0px;border-top-right-radius: 0px;border-bottom-right-radius: 40px;border-bottom-left-radius: 40px;border-top-style: none;border-right-style: none;padding-top: 0px;height: 6vh;">Купить</button>
+                </form>
+                <form method="post"><input class="form-control" type="hidden" name="type" value="add"><button class="btn btn-primary shadow-lg" type="submit" style="width: 100%;font-size: 25px;border-top-left-radius: 0px;border-top-right-radius: 0px;border-bottom-right-radius: 40px;border-bottom-left-radius: 40px;border-top-style: none;border-right-style: none;padding-top: 0px;height: 6vh;">Купить</button></form>
             </div>
         </div>
     </div>
